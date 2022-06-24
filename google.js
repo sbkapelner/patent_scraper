@@ -19,7 +19,7 @@ const createQueryString = (input, page) => {
 const runFetch = async (i, page) => {
     const encodedString = encodeURIComponent(createQueryString(input, page));
     const data = fs.readFileSync('proxy.json', 'utf8');
-    const proxy = `https://${JSON.parse(data.toString()).TIMESTAMP}:${JSON.parse(data.toString()).PORT}`
+    const proxy = `https://${JSON.parse(data.toString()).IP}:${JSON.parse(data.toString()).PORT}`
     const proxyAgent = new HttpsProxyAgent(proxy);
 
     await fetch('https://patents.google.com/xhr/query?' + 'url=' + encodedString, { agent: proxyAgent }).then((res) => res.json())

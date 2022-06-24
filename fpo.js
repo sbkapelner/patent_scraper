@@ -1,5 +1,7 @@
 const cheerio = require('cheerio');
-const axios = require('axios')
+const axios = require('axios');
+const proxy = require('./proxy');
+const fs = require('fs');
 
 const input = 'sheep & grapee';
 const pages = 10;
@@ -13,7 +15,9 @@ const createUrl = (input, page) => {
 }
 
 const runAxios = async (url) => {
-    const response = axios.get(url).then((res) => {
+    const data = fs.readFileSync('proxy.json', 'utf8');
+    const response = axios.get(url, {
+    }).then((res) => {
         const $ = cheerio.load(res.data);
         $("[width='15%']").each((i, element) => {
             if (i != 0) { console.log($(element).text()); }
@@ -23,6 +27,8 @@ const runAxios = async (url) => {
 }
 
 const mainFunction = async () => {
+    await proxy.updateProxy();
+
     let page = 0;
     while (page < pages) {
         await runAxios(createUrl(input, page));
