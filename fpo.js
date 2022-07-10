@@ -2,8 +2,9 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const proxy = require('./proxy');
 const fs = require('fs');
+HttpsProxyAgent = require('https-proxy-agent');
 
-const input = 'sheep & grapee';
+const input = 'beer & maker';
 const pages = 10;
 
 const createUrl = (input, page) => {
@@ -15,12 +16,30 @@ const createUrl = (input, page) => {
 }
 
 const runAxios = async (url) => {
-    const data = fs.readFileSync('proxy.json', 'utf8');
+    const data = fs.readFileSync('.proxy.json', 'utf8');
+    const proxy = `https://${JSON.parse(data.toString()).IP}:${JSON.parse(data.toString()).PORT}`
+    const proxyAgent = new HttpsProxyAgent(proxy);
+
     const response = axios.get(url, {
+        agent: proxyAgent
     }).then((res) => {
         const $ = cheerio.load(res.data);
+
         $("[width='15%']").each((i, element) => {
-            if (i != 0) { console.log($(element).text()); }
+            if (i != 0) {
+                const textToParse = ($(element).text()).replaceAll('/', '');
+
+                if (/[a-zA-Z]/.test(textToParse) == false) {
+
+                    let regex = /[^A-Za-z0-9]+/;
+                    console.log(('US' + textToParse).replace('      ', '').replace('\n', ''));
+                }
+                else {
+                    console.log(textToParse.replace('      ', '').replace('\n', ''));
+                }
+
+
+            }
         })
     })
         .catch(err => console.log(err));

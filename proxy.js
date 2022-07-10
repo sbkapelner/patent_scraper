@@ -36,7 +36,7 @@ let getProxy = () => {
 
         const dataString = JSON.stringify(data);
 
-        fs.writeFile('proxy.json', dataString, (err) => {
+        fs.writeFile('.proxy.json', dataString, (err) => {
             if (err) {
                 throw err;
             }
@@ -48,7 +48,7 @@ let getProxy = () => {
 
 updateProxy = async () => {
     try {
-        const data = fs.readFileSync('proxy.json', 'utf8');
+        const data = fs.readFileSync('.proxy.json', 'utf8');
         if (Date.now() - JSON.parse(data.toString()).TIMESTAMP > 1000) {
             getProxy();
         };
