@@ -22,27 +22,35 @@ const runAxios = async (url) => {
 
     const response = axios.get(url, {
         agent: proxyAgent
-    }).then((res) => {
+    });
+
+    const dataToReturn = response.then((res) => {
+
         const $ = cheerio.load(res.data);
 
-        $("[width='15%']").each((i, element) => {
+        const arr = [];
+
+        const fpoData = $("[width='15%']").each((i, element) => {
             if (i != 0) {
                 const textToParse = ($(element).text()).replaceAll('/', '');
 
                 if (/[a-zA-Z]/.test(textToParse) == false) {
 
                     let regex = /[^A-Za-z0-9]+/;
-                    console.log(('US' + textToParse).replace('      ', '').replace('\n', ''));
+                    arr.push(('US' + textToParse).replace('      ', '').replace('\n', '').replace('    ', ""));
                 }
                 else {
-                    console.log(textToParse.replace('      ', '').replace('\n', ''));
+                    arr.push(textToParse.replace('      ', '').replace('\n', '').replace('    ', ""));
                 }
 
 
             }
         })
+        //console.log(arr);
+        return arr;
     })
         .catch(err => console.log(err));
+    return dataToReturn;
 }
 
 const mainFunction = async () => {
@@ -50,7 +58,8 @@ const mainFunction = async () => {
 
     let page = 0;
     while (page < pages) {
-        await runAxios(createUrl(input, page));
+        FPO = await runAxios(createUrl(input, page));
+        console.log(FPO);
         page++;
     }
 };

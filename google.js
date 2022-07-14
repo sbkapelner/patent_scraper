@@ -23,17 +23,23 @@ const runFetch = async (i, page) => {
     const proxy = `https://${JSON.parse(data.toString()).IP}:${JSON.parse(data.toString()).PORT}`
     const proxyAgent = new HttpsProxyAgent(proxy);
 
-    await fetch('https://patents.google.com/xhr/query?' + 'url=' + encodedString, { agent: proxyAgent }).then((res) => res.json())
+    arr = [];
+
+    googleData = await fetch('https://patents.google.com/xhr/query?' + 'url=' + encodedString, { agent: proxyAgent }).then((res) => res.json())
         .then((data) => {
             const textToParse = data.results.cluster[0].result[i].id.match(/\/(.*?)\//)[1];
 
             const parsedText = textToParse.replace('/', "");
 
-            console.log(parsedText);
+            //console.log(parsedText);
+
+            return parsedText;
 
             //console.log(textToParse.replace(/([0-9](A|B)).*/, ""));// write to db
         })
         .catch(err => console.log(err));
+    arr.push(googleData);
+    return (arr);
 }
 
 const mainFunction = async () => {
@@ -42,7 +48,8 @@ const mainFunction = async () => {
     let page = 0;
     while (page < pages) {
         for (let i = 0; i < 10; i++) {
-            await runFetch(i, page);
+            getGoogleData = await runFetch(i, page);
+            console.log(getGoogleData);
         };
         page++;
     }
