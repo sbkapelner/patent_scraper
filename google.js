@@ -1,6 +1,6 @@
 const fs = require("fs");
-HttpsProxyAgent = require("https-proxy-agent");
-const proxy = require("./proxy");
+//HttpsProxyAgent = require("https-proxy-agent");
+//const proxy = require("./proxy");
 const sqlite3 = require("sqlite3").verbose();
 
 const input = "beer + maker";
@@ -26,17 +26,20 @@ const runFetch = async (i, page) => {
   const encodedString = encodeURIComponent(
     createQueryString(input.replace("&", "+"), page)
   ); //need to replace & with +
-  const data = fs.readFileSync(".proxy.json", "utf8");
+  /*const data = fs.readFileSync(".proxy.json", "utf8");
   const proxy = `https://${JSON.parse(data.toString()).IP}:${
     JSON.parse(data.toString()).PORT
   }`;
-  const proxyAgent = new HttpsProxyAgent(proxy);
+  const proxyAgent = new HttpsProxyAgent(proxy);*/
 
   arr = [];
 
-  googleData = await fetch(
+  /*googleData = await fetch(
     "https://patents.google.com/xhr/query?" + "url=" + encodedString,
     { agent: proxyAgent }
+  )*/
+  googleData = await fetch(
+    "https://patents.google.com/xhr/query?" + "url=" + encodedString
   )
     .then((res) => res.json())
     .then((data) => {
@@ -57,7 +60,7 @@ const runFetch = async (i, page) => {
 };
 
 const mainFunction = async () => {
-  await proxy.updateProxy();
+  //await proxy.updateProxy();
 
   let page = 0;
   const data = [];

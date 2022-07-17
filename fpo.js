@@ -1,8 +1,8 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
-const proxy = require("./proxy");
+//const proxy = require("./proxy");
 const fs = require("fs");
-HttpsProxyAgent = require("https-proxy-agent");
+//HttpsProxyAgent = require("https-proxy-agent");
 
 const input = "beer & maker";
 const pages = 10;
@@ -19,15 +19,17 @@ const createUrl = (input, page) => {
 };
 
 const runAxios = async (url) => {
-  const data = fs.readFileSync(".proxy.json", "utf8");
+  /*const data = fs.readFileSync(".proxy.json", "utf8");
   const proxy = `https://${JSON.parse(data.toString()).IP}:${
     JSON.parse(data.toString()).PORT
   }`;
-  const proxyAgent = new HttpsProxyAgent(proxy);
+  const proxyAgent = new HttpsProxyAgent(proxy);*/
 
-  const response = axios.get(url, {
+  /*const response = axios.get(url, {
     agent: proxyAgent,
-  });
+  });*/
+
+  const response = axios.get(url);
 
   const dataToReturn = response
     .then((res) => {
@@ -65,7 +67,7 @@ const runAxios = async (url) => {
 };
 
 const mainFunction = async () => {
-  await proxy.updateProxy();
+  //await proxy.updateProxy();
 
   let page = 0;
   const data = [];
